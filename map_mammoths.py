@@ -2,20 +2,23 @@ import folium
 from folium import plugins
 import csv
 
+
+# Create a dictionary of species and corresponding marker color.
 mammoth_colors = {'Mammuthus columbi' : 'green',
     'Mammuthus primigenius': 'blue',
     'Mammuthus hayi' : 'purple',
     'Mammuthus exilis' : 'red',
     'Mammuthus' : 'ornage'}
 
-# Create map. Use terrain tiles instead of roads
+# Use terrain tiles to create map
 mammoth_map = folium.Map(location=[40, -120], zoom_start=3, tiles='Stamen Terrain')
 lat_lng = []
 
 # Read in mammoth_data.csv. Use data to Create markers, add to map_mn
+# Use the mammoth_data.csv data to create markers
 with open('mammoth_data.csv', 'r') as mammoth_csv:
     reader = csv.reader(mammoth_csv, quoting=csv.QUOTE_NONNUMERIC)
-    firstline = reader.__next__() # discard title column titles
+    firstline = reader.__next__()
     for line in reader:
         lat = line[3]
         lon = line[4]
@@ -32,8 +35,9 @@ with open('mammoth_data.csv', 'r') as mammoth_csv:
 
 mammoth_map.save('mammoth_map.html')
 
-# Heatmap, uses a list of [lat, lng] coordinates
+# Creates heat map representing where fossil finds are most concentrated.
 
 heatmap = folium.Map(location=[40, -120], zoom_start=3)
-heatmap.add_children(plugins.HeatMap(lat_lng))
+# heatmap.add_children(plugins.HeatMap(lat_lng))
+heatmap.add_child(plugins.HeatMap(lat_lng))
 heatmap.save('mammoth_heatmap.html')
